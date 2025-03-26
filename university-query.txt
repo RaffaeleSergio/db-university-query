@@ -72,12 +72,96 @@ GROUP BY `office_address`;
 
 Punto 3
 
-SELECT `student_id`, AVG(`vote`) AS average_votes
+SELECT `exam_id`, AVG(`vote`) AS average_votes
 FROM `exam_student`
-GROUP BY `student_id`;
+GROUP BY `exam_id`;
 
 Punto 4
 
 SELECT `department_id`, COUNT(*) AS number_of_courses
 FROM `degrees`
 GROUP BY `department_id`;
+
+
+JOIN
+
+Punto 1
+
+SELECT DISTINCT `students`.`id`, `students`.`name`, `students`.`surname`, `degrees`.`name` AS `degrees_name`
+FROM `students`
+INNER JOIN `degrees`
+ON `students`.`degree_id` = `degrees`.`id`
+WHERE `degrees`.`name` = "Corso di Laurea in Economia"
+ORDER BY `students`.`name`;
+
+
+Punto 2
+
+SELECT `degrees`.`id`, `degrees`.`name` AS `degrees_name`, `departments`.`name` AS `departments_name`
+FROM `degrees`
+INNER JOIN `departments`
+ON `degrees`.`department_id` = `departments`.`id`
+WHERE `degrees`.`level` = "magistrale"
+AND `departments`.`name` = "Dipartimento di Neuroscienze";
+
+
+Punto 3
+
+SELECT `teachers`.`id`, `teachers`.`name`, `teachers`.`surname`, `courses`.`name` AS `courses_name`
+FROM `teachers`
+INNER JOIN `course_teacher`
+ON `teachers`.`id` = `course_teacher`.`teacher_id`
+INNER JOIN `courses`
+ON `course_teacher`.`course_id` = `courses`.`id`
+WHERE `teachers`.`id` = "44"
+ORDER BY `courses`.`name`;
+
+Punto 4
+
+SELECT `students`.`id`, `students`.`name`, `students`.`surname`, `degrees`.`name` AS `degrees_name`, `departments`.`name` AS `departments_name`
+FROM `students`
+INNER JOIN `degrees`
+ON `students`.`degree_id` = `degrees`.`id`
+INNER JOIN `departments`
+ON `degrees`.`department_id` = `departments`.`id`
+ORDER BY `students`.`surname`;
+
+
+Punto 5
+
+SELECT `degrees`.`name` AS `degrees_name`, `courses`.`name` AS `courses_name`, `teachers`.`name`, `teachers`.`surname`
+FROM `degrees`
+INNER JOIN `courses`
+ON `degrees`.`id` = `courses`.`degree_id`
+INNER JOIN `course_teacher`
+ON `degrees`.`id` = `course_teacher`.`course_id`
+INNER JOIN `teachers`
+ON `course_teacher`.`teacher_id` = `teachers`.`id`
+ORDER BY `teachers`.`surname`;
+
+Punto 6
+
+SELECT `teachers`.`id`, `teachers`.`name`, `teachers`.`surname`, `departments`.`name` AS `department_name`
+FROM `teachers`
+INNER JOIN `course_teacher`
+ON `teachers`.`id` = `course_teacher`.`teacher_id`
+INNER JOIN `courses`
+ON `course_teacher`.`course_id` = `courses`.`id`
+INNER JOIN `degrees`
+ON `courses`.`degree_id` = `degrees`.`id`
+INNER JOIN `departments`
+ON `degrees`.`department_id` = `departments`.`id`
+WHERE `departments`.`name` = "Dipartimento di Matematica"
+ORDER BY `teachers`.`surname`;
+
+
+Punto 7
+
+SELECT `students`.`id`, `students`.`surname`, `students`.`name`, `exams`.`id`, COUNT(*) AS `attempt_exam`
+FROM `students`
+INNER JOIN `exam_student`
+ON `students`.`id` = `exam_student`.`student_id`
+INNER JOIN `exams`
+ON `exam_student`.`exam_id` = `exams`.`id` 
+GROUP BY `students`.`id`, `exams`.`id`
+ORDER BY `students`.`surname`;
